@@ -423,7 +423,7 @@ def generate_insights() -> list[dict]:
     # Cari saham paling stabil di tiap sektor dominan
     top_per_sector = risk.groupby("Sector").apply(
         lambda g: g.sort_values("Risk_Score").iloc[0]
-    ).reset_index(drop=True)
+    ).reset_index()
     financial_winner = top_per_sector[top_per_sector["Sector"] == "Financials"].iloc[0] \
         if "Financials" in top_per_sector["Sector"].values else None
     if financial_winner is not None:
