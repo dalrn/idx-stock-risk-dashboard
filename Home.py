@@ -421,9 +421,11 @@ def generate_insights() -> list[dict]:
 
     # Insight 11: Sektor winner konkret
     # Cari saham paling stabil di tiap sektor dominan
-    top_per_sector = risk.groupby("Sector").apply(
-        lambda g: g.sort_values("Risk_Score").iloc[0]
-    ).reset_index(drop=True)
+    top_per_sector = (
+        risk.sort_values("Risk_Score")
+        .groupby("Sector", as_index=False)
+        .first()
+    )
     financial_winner = top_per_sector[top_per_sector["Sector"] == "Financials"].iloc[0] \
         if "Financials" in top_per_sector["Sector"].values else None
     if financial_winner is not None:
@@ -437,6 +439,7 @@ def generate_insights() -> list[dict]:
                 f"menunjukkan profil risiko rendah."
             ),
         })
+
 
     return insights
 
@@ -508,6 +511,7 @@ st.caption("💫 Geser ke kanan untuk melihat insight lainnya.")
 # FOOTER
 
 st.divider()
+
 
 # with st.expander("ℹ️ Tentang dashboard ini"):
 #     st.markdown(
